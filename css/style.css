@@ -1,0 +1,908 @@
+/* Salat Tunisia - Premium Mobile PWA Theme */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+
+:root {
+    --tunisia-red: #c60c30;
+    --tunisia-red-dark: #8a0821;
+    --gold: #d4af37;
+    --gold-dim: #bba048;
+    --midnight: #1a252f;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+    --white: #1a1a2e;
+    --midnight: #f1f2f6;
+    --text-primary: #f1f2f6;
+    --text-secondary: #b2bec3;
+    background: #0f0f1a;
+}
+
+body.dark-mode .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .calendar-table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .settings-section {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Progress Widget Styles */
+.progress-card {
+    padding: 20px 15px !important;
+    text-align: center;
+}
+
+.main-countdown-wrapper {
+    margin-bottom: 15px;
+}
+
+.big-countdown {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--midnight);
+    font-family: 'Courier New', monospace;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.next-prayer-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--tunisia-red);
+    margin-top: 5px;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 5px;
+    color: var(--text-secondary);
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to left, var(--gold), var(--tunisia-red));
+    border-radius: 4px;
+    transition: width 1s linear;
+}
+
+.progress-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+#progressPercentage {
+    color: var(--tunisia-red-dark);
+    font-weight: 800;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+    direction: rtl;
+    overflow-x: hidden;
+    transition: background 1.5s ease;
+    /* Smooth transition for dynamic backgrounds */
+}
+
+/* Dynamic Background Gradients */
+body.bg-fajr {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+}
+
+body.bg-dhuhr {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+body.bg-asr {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+body.bg-maghrib {
+    background: linear-gradient(135deg, #fa709a, #fee140);
+}
+
+body.bg-isha {
+    background: linear-gradient(135deg, #09203f, #537895);
+}
+
+/* Main Container */
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    padding-bottom: 90px;
+    /* Space for bottom nav */
+    gap: 15px;
+}
+
+/* Glassmorphism Card Utility */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, var(--tunisia-red) 0%, var(--tunisia-red-dark) 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(198, 12, 48, 0.3);
+}
+
+.header-content h1 {
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+.header-content p {
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#liveClock {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.mute-btn-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* View Management */
+.app-view {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.app-view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dashboard Styles */
+.location-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.location-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.date-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.main-date-picker {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--midnight);
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 150px;
+}
+
+.main-date-picker:hover {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--gold);
+}
+
+.btn-today {
+    background: var(--tunisia-red);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(198, 12, 48, 0.2);
+}
+
+.btn-today:hover {
+    background: var(--tunisia-red-dark);
+    transform: translateY(-1px);
+}
+
+.btn-today:active {
+    transform: translateY(0);
+}
+
+.btn-icon-label {
+    background: var(--midnight);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.btn-icon-label:active {
+    transform: scale(0.95);
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--tunisia-red-dark);
+    font-family: 'Courier New', monospace;
+}
+
+/* Prayer Cards */
+.prayers-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.prayer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 16px;
+    border-right: 6px solid #e0e0e0;
+    transition: 0.3s;
+}
+
+.prayer-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.prayer-time {
+    font-size: 1.6rem;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    color: var(--midnight);
+}
+
+.prayer-item.active {
+    background: linear-gradient(to left, #fff9e6, #ffffff);
+    border-right-color: var(--gold);
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+}
+
+.prayer-item.approaching {
+    border-right-color: #ff9800;
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        border-right-color: #ff9800;
+    }
+
+    50% {
+        border-right-color: #ffe0b2;
+    }
+
+    100% {
+        border-right-color: #ff9800;
+    }
+}
+
+.countdown-badge {
+    background: var(--midnight);
+    color: var(--gold);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    display: none;
+}
+
+.prayer-item.active .countdown-badge {
+    display: block;
+}
+
+/* Calendar Table Styles - Enhanced */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.month-info {
+    flex: 1;
+    text-align: center;
+}
+
+.month-nav-btn {
+    background: var(--tunisia-red);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    box-shadow: 0 2px 8px rgba(198, 12, 48, 0.3);
+}
+
+.month-nav-btn:hover {
+    background: var(--tunisia-red-dark);
+    transform: scale(1.1);
+}
+
+.month-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.ramadan-badge {
+    background: linear-gradient(135deg, #4a148c, #7b1fa2);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-top: 10px;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(74, 20, 140, 0.3);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(74, 20, 140, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(74, 20, 140, 0.6);
+    }
+}
+
+.calendar-container {
+    overflow-x: auto;
+    margin-top: 5px;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.calendar-table th {
+    padding: 12px 8px;
+    color: white;
+    background: linear-gradient(135deg, var(--tunisia-red), var(--tunisia-red-dark));
+    border-bottom: 3px solid var(--gold);
+    font-weight: 800;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.calendar-table td {
+    padding: 10px 6px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    transition: 0.2s;
+}
+
+.calendar-table tr:hover td {
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.calendar-table tr.today {
+    background: linear-gradient(to left, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.15));
+}
+
+.calendar-table tr.today td {
+    color: var(--tunisia-red);
+    font-weight: 900;
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+}
+
+.calendar-table tr.today td:first-child {
+    border-right: 3px solid var(--gold);
+}
+
+.calendar-table td.imsak-time {
+    color: #4a148c;
+    font-weight: 800;
+}
+
+/* Qibla Compass - Enhanced */
+.qibla-container {
+    text-align: center;
+}
+
+.compass-wrapper {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 30px auto;
+}
+
+/* Cardinal Directions */
+.cardinal {
+    position: absolute;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    z-index: 5;
+}
+
+.cardinal.north {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--tunisia-red);
+}
+
+.cardinal.south {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cardinal.east {
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cardinal.west {
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.compass-disk {
+    width: 100%;
+    height: 100%;
+    border: 6px solid var(--gold);
+    border-radius: 50%;
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(212, 175, 55, 0.2);
+    transition: transform 0.3s ease-out;
+    will-change: transform;
+}
+
+.compass-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 100px;
+    background: linear-gradient(to bottom, var(--tunisia-red), var(--tunisia-red-dark));
+    transform: translate(-50%, -100%);
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.compass-arrow::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 20px solid var(--tunisia-red);
+}
+
+.compass-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    z-index: 3;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.qibla-info {
+    margin: 20px 0;
+}
+
+.qibla-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--midnight);
+    margin-bottom: 10px;
+}
+
+.qibla-status {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.05);
+    display: inline-block;
+}
+
+.qibla-status.active {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+.compass-btn {
+    background: linear-gradient(135deg, var(--tunisia-red), var(--tunisia-red-dark));
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(198, 12, 48, 0.3);
+    transition: 0.3s;
+}
+
+.compass-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(198, 12, 48, 0.4);
+}
+
+.compass-btn:active {
+    transform: translateY(0);
+}
+
+.qibla-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+}
+
+/* Settings Styles - Enhanced */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--tunisia-red);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.setting-item label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.control-input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-family: inherit;
+    font-weight: 600;
+    width: 180px;
+    text-align: center;
+}
+
+.control-input-small {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    width: 80px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.control-input-small:focus {
+    outline: none;
+    border-color: var(--tunisia-red);
+    box-shadow: 0 0 0 3px rgba(198, 12, 48, 0.1);
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background: linear-gradient(135deg, var(--tunisia-red), var(--tunisia-red-dark));
+}
+
+input:checked+.slider:before {
+    transform: translateX(30px);
+}
+
+/* Action Buttons */
+.settings-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--tunisia-red), var(--tunisia-red-dark));
+    color: white;
+    box-shadow: 0 4px 15px rgba(198, 12, 48, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(198, 12, 48, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--text-primary);
+    border: 2px solid var(--gold);
+}
+
+.btn-secondary:hover {
+    background: var(--gold);
+    color: white;
+}
+
+.settings-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 5px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    z-index: 1000;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-secondary);
+    width: 25%;
+}
+
+.nav-item.active {
+    color: var(--tunisia-red);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    opacity: 0.7;
+}
+
+/* Extra Mobile Optimizations */
+@media (max-width: 400px) {
+    .prayer-name {
+        font-size: 1rem;
+    }
+
+    .prayer-time {
+        font-size: 1.4rem;
+    }
+}
