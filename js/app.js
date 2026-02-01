@@ -69,7 +69,9 @@ const ui = {
     saveSettings: document.getElementById('saveSettings'),
     resetSettings: document.getElementById('resetSettings'),
     mainDateInput: document.getElementById('mainDateInput'),
-    todayBtn: document.getElementById('todayBtn')
+    todayBtn: document.getElementById('todayBtn'),
+    currentDegrees: document.getElementById('currentDegrees'),
+    targetDegrees: document.getElementById('targetDegrees')
 };
 
 // State
@@ -618,6 +620,20 @@ function handleOrientation(event) {
 
     if (ui.compassDisk) {
         ui.compassDisk.style.transform = `rotate(${smoothRotation}deg)`;
+    }
+
+    // Update Digital Display
+    if (ui.currentDegrees) {
+        ui.currentDegrees.innerText = `${Math.round(deviceHeading)}°`;
+    }
+    if (ui.targetDegrees) {
+        ui.targetDegrees.innerText = `${Math.round(qiblaAngle)}°`;
+    }
+
+    // Visual feedback when aligned (within 2 degrees)
+    const isAligned = Math.abs(rotation % 360) < 2;
+    if (ui.currentDegrees) {
+        ui.currentDegrees.style.color = isAligned ? 'var(--tunisia-red)' : '';
     }
 }
 
