@@ -1,19 +1,19 @@
 {
     "name": "مرصد المواقيت التونسي",
     "short_name": "صلاتي",
-    "start_url": "index.html",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#f4f7f6",
     "theme_color": "#c60c30",
     "orientation": "portrait",
     "icons": [
         {
-            "src": "assets/icon-192.png",
+            "src": "./assets/icon-192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "assets/icon-512.png",
+            "src": "./assets/icon-512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
