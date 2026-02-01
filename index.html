@@ -137,48 +137,61 @@
                 </div>
             </section>
 
-            <!-- View 3: Qibla -->
-            <section id="view-qibla" class="app-view">
-                <div class="glass-card qibla-container">
-                    <h3 class="view-title">🕋 اتجاه القبلة</h3>
+            <!-- View 3: Adhkar -->
+            <section id="view-adhkar" class="app-view">
+                <div class="glass-card adhkar-container">
+                    <h3 class="view-title">📿 الأذكار والتسابيح</h3>
 
-                    <div class="qibla-digital-display">
-                        <div class="digital-item">
-                            <span class="digital-label">اتجاه الهاتف</span>
-                            <span id="currentDegrees" class="digital-value">0°</span>
+                    <!-- Tasbih Counter Quick Tool -->
+                    <div class="tasbih-tool">
+                        <div class="tasbih-display">
+                            <span id="tasbihCount">0</span>
+                            <p id="tasbihText">سبحان الله</p>
                         </div>
-                        <div class="digital-item">
-                            <span class="digital-label">زاوية القبلة</span>
-                            <span id="targetDegrees" class="digital-value">--°</span>
-                        </div>
-                    </div>
-
-                    <div class="compass-wrapper">
-                        <!-- Cardinal Directions -->
-                        <div class="cardinal north">شمال</div>
-                        <div class="cardinal east">شرق</div>
-                        <div class="cardinal south">جنوب</div>
-                        <div class="cardinal west">غرب</div>
-
-                        <!-- Compass Disk -->
-                        <div class="compass-disk" id="compassDisk">
-                            <div class="compass-arrow"></div>
-                            <div class="compass-center">🕋</div>
+                        <div class="tasbih-buttons">
+                            <button id="tasbihBtn" class="btn-primary">اضغط للتسبيح</button>
+                            <button id="resetTasbih" class="btn-secondary">إعادة</button>
                         </div>
                     </div>
 
-                    <div class="qibla-info">
-                        <div class="qibla-value">
-                            <span id="val-qibla">--</span>°
+                    <!-- Adhkar Categories -->
+                    <div class="adhkar-grid">
+                        <div class="adhkar-card">
+                            <span class="adhkar-icon">☀️</span>
+                            <h4>أذكار الصباح</h4>
+                            <p>تقرأ من الفجر إلى طلوع الشمس</p>
+                            <button class="btn-read-adhkar" data-type="sabah">قراءة</button>
                         </div>
-                        <div class="qibla-status" id="compassStatus">البوصلة غير نشطة</div>
+                        <div class="adhkar-card">
+                            <span class="adhkar-icon">🌙</span>
+                            <h4>أذكار المساء</h4>
+                            <p>تقرأ من العصر إلى غروب الشمس</p>
+                            <button class="btn-read-adhkar" data-type="masaa">قراءة</button>
+                        </div>
+                        <div class="adhkar-card">
+                            <span class="adhkar-icon">🙏</span>
+                            <h4>أذكار الصلاة</h4>
+                            <p>تقرأ مباشرة بعد التسليم</p>
+                            <button class="btn-read-adhkar" data-type="prayer">قراءة</button>
+                        </div>
+                        <div class="adhkar-card">
+                            <span class="adhkar-icon">💤</span>
+                            <h4>أذكار النوم</h4>
+                            <p>تقرأ قبل النوم مباشرة</p>
+                            <button class="btn-read-adhkar" data-type="sleep">قراءة</button>
+                        </div>
                     </div>
+                </div>
 
-                    <button id="activateCompass" class="compass-btn">
-                        🧭 تفعيل البوصلة الحية
-                    </button>
-
-                    <p class="qibla-hint">امسك الهاتف بشكل أفقي واتجه نحو السهم الأحمر</p>
+                <!-- Adhkar Reading Modal/Panel (Hidden by default) -->
+                <div id="adhkarModal" class="adhkar-modal hidden">
+                    <div class="modal-content glass-card">
+                        <button id="closeAdhkar" class="close-btn">&times;</button>
+                        <h2 id="modalTitle">أذكار الصباح</h2>
+                        <div id="adhkarList" class="adhkar-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
                 </div>
             </section>
 
