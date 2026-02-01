@@ -18,10 +18,11 @@
 /* Dark Mode Overrides */
 body.dark-mode {
     --white: #1a1a2e;
-    --midnight: #f1f2f6;
+    --midnight: #ffffff;
+    /* Make midnight white in dark mode for text contrast */
     --text-primary: #f1f2f6;
     --text-secondary: #b2bec3;
-    background: #0f0f1a;
+    background: #0b0e14;
 }
 
 body.dark-mode .glass-card {
@@ -30,13 +31,54 @@ body.dark-mode .glass-card {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+body.dark-mode .prayer-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-right-color: rgba(212, 175, 55, 0.3);
+    color: white;
+}
+
+body.dark-mode .prayer-item.active {
+    background: rgba(198, 12, 48, 0.15);
+    border-right-color: var(--tunisia-red);
+}
+
+body.dark-mode .btn-icon-label {
+    background: var(--tunisia-red);
+    color: white;
+}
+
+body.dark-mode .main-date-picker {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .info-row {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
 body.dark-mode .calendar-table td {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #f1f2f6;
 }
 
 body.dark-mode .settings-section {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .adhkar-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .dhikr-item {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+body.dark-mode .dhikr-text {
+    color: white;
 }
 
 * {
@@ -540,193 +582,187 @@ header {
     font-weight: 800;
 }
 
-/* Qibla Compass - Enhanced */
-.qibla-digital-display {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+/* Adhkar & Tasbih Styles */
 
-.digital-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 100px;
-}
-
-.digital-label {
-    font-size: 0.75rem;
-    color: var(--gold-dim);
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-.digital-value {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--midnight);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.dark-mode .digital-value {
-    color: white;
-}
-
-.qibla-container {
+/* Adhkar & Tasbih Styles */
+.adhkar-container {
     text-align: center;
 }
 
-.compass-wrapper {
-    position: relative;
-    width: 280px;
-    height: 280px;
-    margin: 0 auto 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.tasbih-tool {
+    background: linear-gradient(135deg, var(--midnight), #1a1a1a);
+    padding: 30px 20px;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* Cardinal Directions */
-.cardinal {
-    position: absolute;
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: var(--text-secondary);
-    z-index: 5;
+.tasbih-display {
+    margin-bottom: 25px;
 }
 
-.cardinal.north {
-    top: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--tunisia-red);
-}
-
-.cardinal.south {
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.cardinal.east {
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.cardinal.west {
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.compass-disk {
-    width: 100%;
-    height: 100%;
-    border: 6px solid var(--gold);
-    border-radius: 50%;
-    position: relative;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(212, 175, 55, 0.2);
-    transition: transform 0.3s ease-out;
-    will-change: transform;
-}
-
-.compass-arrow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 6px;
-    height: 100px;
-    background: linear-gradient(to bottom, var(--tunisia-red), var(--tunisia-red-dark));
-    transform: translate(-50%, -100%);
-    border-radius: 3px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 2;
-}
-
-.compass-arrow::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 20px solid var(--tunisia-red);
-}
-
-.compass-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2.5rem;
-    z-index: 3;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.qibla-info {
-    margin: 20px 0;
-}
-
-.qibla-value {
-    font-size: 2.5rem;
+#tasbihCount {
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
     font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    display: block;
+}
+
+#tasbihText {
+    font-size: 1.4rem;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+.tasbih-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+#tasbihBtn {
+    flex: 2;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    background: var(--tunisia-red);
+    box-shadow: 0 5px 15px rgba(198, 12, 48, 0.4);
+}
+
+#resetTasbih {
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.adhkar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.adhkar-card {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 20px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    transition: 0.3s;
+}
+
+.adhkar-card:hover {
+    transform: translateY(-5px);
+    background: white;
+}
+
+.adhkar-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.adhkar-card h4 {
+    font-size: 1.1rem;
+    color: var(--tunisia-red);
+    margin-bottom: 5px;
+}
+
+.adhkar-card p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    height: 35px;
+}
+
+.btn-read-adhkar {
+    background: var(--midnight);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Adhkar Modal */
+.adhkar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.adhkar-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.1);
+}
+
+.modal-content {
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 40px 20px 20px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--tunisia-red);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.adhkar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.dhikr-item {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    border-right: 5px solid var(--gold);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dhikr-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
     color: var(--midnight);
     margin-bottom: 10px;
 }
 
-.qibla-status {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    padding: 5px 15px;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.05);
+.dhikr-count {
     display: inline-block;
-}
-
-.qibla-status.active {
-    background: rgba(76, 175, 80, 0.15);
-    color: #4caf50;
-}
-
-.compass-btn {
-    background: linear-gradient(135deg, var(--tunisia-red), var(--tunisia-red-dark));
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-size: 1rem;
+    background: var(--gold-dim);
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
     font-weight: 700;
-    cursor: pointer;
-    margin: 15px 0;
-    box-shadow: 0 4px 15px rgba(198, 12, 48, 0.3);
-    transition: 0.3s;
-}
-
-.compass-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(198, 12, 48, 0.4);
-}
-
-.compass-btn:active {
-    transform: translateY(0);
-}
-
-.qibla-hint {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 15px;
 }
 
 /* Settings Styles - Enhanced */
