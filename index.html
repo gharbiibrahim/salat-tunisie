@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>صلاتي - تونس</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c60c30">
+    <link rel="icon" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Header (Shared) -->
+        <header>
+            <div class="header-content">
+                <h1>🕌 صلاتي</h1>
+                <p id="fullDate">جاري التحميل...</p>
+            </div>
+
+            <div class="header-tools">
+                <button id="muteBtn" class="mute-btn-circle" title="تفعيل/كتم الأذان">🔇</button>
+                <div id="liveClock">00:00:00</div>
+            </div>
+        </header>
+
+        <!-- Hidden Audio Element -->
+        <audio id="adhanAudio" src="assets/adhan.mp3" preload="auto"></audio>
+
+        <!-- Main Views Container -->
+        <main id="mainContent">
+
+            <!-- View 1: Dashboard -->
+            <section id="view-dashboard" class="app-view active">
+                <!-- Location Summary -->
+                <div class="glass-card location-summary">
+                    <div class="location-info">
+                        <span id="displayLocation">📍 تونس العاصمة</span>
+                        <div class="date-controls">
+                            <input type="date" id="mainDateInput" class="main-date-picker">
+                            <button id="todayBtn" class="btn-today">اليوم</button>
+                        </div>
+                    </div>
+                    <button id="locateBtn" class="btn-icon-label">
+                        <span>تحديث الموقع</span>
+                    </button>
+                </div>
+
+                <!-- Main Countdown & Progress Widget -->
+                <div class="glass-card progress-card">
+                    <div class="main-countdown-wrapper">
+                        <div id="mainCountdown" class="big-countdown">--:--:--</div>
+                        <div class="next-prayer-title">حتى صلاة <span id="nextPrayerName">...</span></div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div id="prayerProgressBar" class="progress-bar"></div>
+                    </div>
+
+                    <div class="progress-labels">
+                        <span id="prevPrayerName">...</span>
+                        <span id="progressPercentage">0%</span>
+                    </div>
+                </div>
+
+                <!-- Prayer List (Directly under progress) -->
+                <div class="prayers-list" id="prayerContainer">
+                    <div class="prayer-item" id="card-fajr">
+                        <div class="prayer-name">الفجر</div>
+                        <div class="prayer-time" id="time-fajr">--:--</div>
+                    </div>
+
+                    <div class="prayer-item" id="card-dhuhr">
+                        <div class="prayer-name">الظهر</div>
+                        <div class="prayer-time" id="time-dhuhr">--:--</div>
+                    </div>
+
+                    <div class="prayer-item" id="card-asr">
+                        <div class="prayer-name">العصر</div>
+                        <div class="prayer-time" id="time-asr">--:--</div>
+                    </div>
+
+                    <div class="prayer-item" id="card-maghrib">
+                        <div class="prayer-name">المغرب</div>
+                        <div class="prayer-time" id="time-maghrib">--:--</div>
+                    </div>
+
+                    <div class="prayer-item" id="card-isha">
+                        <div class="prayer-name">العشاء</div>
+                        <div class="prayer-time" id="time-isha">--:--</div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content (Solar Info below) -->
+                <div class="dashboard-grid">
+                    <div class="glass-card solar-panel">
+                        <div class="info-row">
+                            <span class="info-label">🌅 الشروق</span>
+                            <span class="info-value" id="val-sunrise">--:--</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">⌛ الزوال</span>
+                            <span class="info-value" id="val-noon">--:--</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">🌇 الغروب</span>
+                            <span class="info-value" id="val-sunset">--:--</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">⏱️ طول النهار</span>
+                            <span class="info-value" id="val-daylen">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View 2: Calendar -->
+            <section id="view-calendar" class="app-view">
+                <div class="glass-card">
+                    <div class="calendar-header">
+                        <button id="nextMonth" class="month-nav-btn">▶</button>
+                        <div class="month-info">
+                            <h3 class="view-title" id="calendarMonthTitle">📅 إمساكية الشهر</h3>
+                            <div id="ramadanBadge" class="ramadan-badge" style="display:none;">
+                                🌙 شهر رمضان المبارك
+                            </div>
+                        </div>
+                        <button id="prevMonth" class="month-nav-btn">◀</button>
+                    </div>
+                    <div class="calendar-container" id="calendarTable">
+                        <p style="text-align:center; padding:20px;">جاري تجهيز الجدول...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View 3: Qibla -->
+            <section id="view-qibla" class="app-view">
+                <div class="glass-card qibla-container">
+                    <h3 class="view-title">🕋 اتجاه القبلة</h3>
+
+                    <div class="compass-wrapper">
+                        <!-- Cardinal Directions -->
+                        <div class="cardinal north">شمال</div>
+                        <div class="cardinal east">شرق</div>
+                        <div class="cardinal south">جنوب</div>
+                        <div class="cardinal west">غرب</div>
+
+                        <!-- Compass Disk -->
+                        <div class="compass-disk" id="compassDisk">
+                            <div class="compass-arrow"></div>
+                            <div class="compass-center">🕋</div>
+                        </div>
+                    </div>
+
+                    <div class="qibla-info">
+                        <div class="qibla-value">
+                            <span id="val-qibla">--</span>°
+                        </div>
+                        <div class="qibla-status" id="compassStatus">البوصلة غير نشطة</div>
+                    </div>
+
+                    <button id="activateCompass" class="compass-btn">
+                        🧭 تفعيل البوصلة الحية
+                    </button>
+
+                    <p class="qibla-hint">امسك الهاتف بشكل أفقي واتجه نحو السهم الأحمر</p>
+                </div>
+            </section>
+
+            <!-- View 4: Settings -->
+            <section id="view-settings" class="app-view">
+                <div class="glass-card">
+                    <h3 class="view-title">⚙️ الإعدادات</h3>
+
+                    <div class="settings-list">
+                        <!-- Location Settings -->
+                        <div class="settings-section">
+                            <h4 class="section-title">📍 الموقع</h4>
+                            <div class="setting-item">
+                                <label>خط العرض (Lat)</label>
+                                <input type="number" id="lat" value="37.0400" step="0.0001" class="control-input">
+                            </div>
+                            <div class="setting-item">
+                                <label>خط الطول (Long)</label>
+                                <input type="number" id="lng" value="9.6650" step="0.0001" class="control-input">
+                            </div>
+                        </div>
+
+                        <!-- Theme Settings -->
+                        <div class="settings-section">
+                            <h4 class="section-title">🎨 المظهر</h4>
+                            <div class="setting-item">
+                                <label>الوضع الليلي</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="settings-actions">
+                            <button id="saveSettings" class="btn-primary">
+                                💾 حفظ الإعدادات
+                            </button>
+                            <button id="resetSettings" class="btn-secondary">
+                                🔄 إعادة تعيين
+                            </button>
+                        </div>
+
+                        <p class="settings-note">
+                            💡 سيتم حفظ إعداداتك تلقائياً في المتصفح
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-view="view-dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">الرئيسية</span>
+            </button>
+            <button class="nav-item" data-view="view-calendar">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">التقويم</span>
+            </button>
+            <button class="nav-item" data-view="view-qibla">
+                <span class="nav-icon">🕋</span>
+                <span class="nav-label">القبلة</span>
+            </button>
+            <button class="nav-item" data-view="view-settings">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">الإعدادات</span>
+            </button>
+        </nav>
+
+        <footer>
+            تم التطوير بواسطة Antigravity | مرصد الجمهورية التونسية
+        </footer>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="js/calculator.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(err => console.log('SW Error:', err));
+        }
+    </script>
+</body>
+
+</html>
