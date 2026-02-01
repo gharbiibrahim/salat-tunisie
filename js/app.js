@@ -540,6 +540,7 @@ function updateActivePrayer(curMins) {
 // ========== LIVE COMPASS FUNCTIONALITY ==========
 let compassActive = false;
 let deviceHeading = 0;
+let lastRotation = 0; // For smoothing
 
 if (ui.activateCompass) {
     ui.activateCompass.addEventListener('click', async () => {
@@ -549,6 +550,8 @@ if (ui.activateCompass) {
             ui.activateCompass.innerHTML = '🧭 تفعيل البوصلة الحية';
             ui.compassStatus.innerText = 'البوصلة غير نشطة';
             ui.compassStatus.classList.remove('active');
+            window.removeEventListener('deviceorientationabsolute', handleOrientation);
+            window.removeEventListener('deviceorientation', handleOrientation);
             return;
         }
 
@@ -562,7 +565,6 @@ if (ui.activateCompass) {
                 }
             } catch (error) {
                 console.error('Permission error:', error);
-                alert('حدث خطأ في طلب الإذن');
                 return;
             }
         }
@@ -573,34 +575,49 @@ if (ui.activateCompass) {
         ui.compassStatus.innerText = 'البوصلة نشطة';
         ui.compassStatus.classList.add('active');
 
-        // Listen to device orientation
-        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-        window.addEventListener('deviceorientation', handleOrientation, true);
+        // Prefer deviceorientationabsolute for better accuracy on Android
+        if ('ondeviceorientationabsolute' in window) {
+            window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+        } else {
+            window.addEventListener('deviceorientation', handleOrientation, true);
+        }
     });
 }
 
 function handleOrientation(event) {
     if (!compassActive) return;
 
-    // Get compass heading
-    let alpha = event.alpha; // 0-360 degrees
-    let webkitAlpha = event.webkitCompassHeading; // iOS
+    let heading = 0;
 
-    if (webkitAlpha !== undefined && webkitAlpha !== null) {
-        deviceHeading = webkitAlpha;
-    } else if (alpha !== undefined && alpha !== null) {
-        deviceHeading = 360 - alpha; // Invert for standard compass
+    // Check for iOS heading first
+    if (event.webkitCompassHeading !== undefined) {
+        heading = event.webkitCompassHeading;
+    } else if (event.absolute === true || event.alpha !== null) {
+        // Android or absolute orientation
+        heading = 360 - event.alpha;
     } else {
         return;
     }
 
-    // Update compass disk rotation
-    // We rotate the disk to show device heading, and the arrow points to Qibla
+    // Update state
+    deviceHeading = heading;
+
+    // Calculate rotation to Qibla
     const qiblaAngle = Calculator.getQibla(state.lat, state.lng);
-    const rotation = deviceHeading - qiblaAngle;
+    let rotation = (deviceHeading - qiblaAngle);
+
+    // Smoothing the rotation to avoid jitters
+    if (Math.abs(rotation - lastRotation) > 180) {
+        if (rotation > lastRotation) lastRotation += 360;
+        else lastRotation -= 360;
+    }
+
+    // Low-pass filter for smoother movement
+    const smoothRotation = lastRotation + (rotation - lastRotation) * 0.1;
+    lastRotation = smoothRotation;
 
     if (ui.compassDisk) {
-        ui.compassDisk.style.transform = `rotate(${rotation}deg)`;
+        ui.compassDisk.style.transform = `rotate(${smoothRotation}deg)`;
     }
 }
 
