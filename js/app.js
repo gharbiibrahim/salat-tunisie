@@ -11,9 +11,18 @@ const ui = {
     valSunrise: document.getElementById('val-sunrise'),
     valSunset: document.getElementById('val-sunset'),
     valNoon: document.getElementById('val-noon'),
-    valQibla: document.getElementById('val-qibla'),
     valDayLen: document.getElementById('val-daylen'),
-    compassDisk: document.getElementById('compassDisk'),
+
+    // Adhkar & Tasbih
+    tasbihBtn: document.getElementById('tasbihBtn'),
+    resetTasbih: document.getElementById('resetTasbih'),
+    tasbihCount: document.getElementById('tasbihCount'),
+    tasbihText: document.getElementById('tasbihText'),
+    readAdhkarBtns: document.querySelectorAll('.btn-read-adhkar'),
+    adhkarModal: document.getElementById('adhkarModal'),
+    closeAdhkar: document.getElementById('closeAdhkar'),
+    modalTitle: document.getElementById('modalTitle'),
+    adhkarList: document.getElementById('adhkarList'),
 
     // Audio
     muteBtn: document.getElementById('muteBtn'),
@@ -54,10 +63,6 @@ const ui = {
     nextPrayerName: document.getElementById('nextPrayerName'),
     mainCountdown: document.getElementById('mainCountdown'),
 
-    // Compass
-    activateCompass: document.getElementById('activateCompass'),
-    compassStatus: document.getElementById('compassStatus'),
-
     // Calendar Navigation
     prevMonth: document.getElementById('prevMonth'),
     nextMonth: document.getElementById('nextMonth'),
@@ -69,9 +74,7 @@ const ui = {
     saveSettings: document.getElementById('saveSettings'),
     resetSettings: document.getElementById('resetSettings'),
     mainDateInput: document.getElementById('mainDateInput'),
-    todayBtn: document.getElementById('todayBtn'),
-    currentDegrees: document.getElementById('currentDegrees'),
-    targetDegrees: document.getElementById('targetDegrees')
+    todayBtn: document.getElementById('todayBtn')
 };
 
 // State
@@ -89,7 +92,9 @@ let state = {
         maghrib: 2, // Fixed: 2 minutes after sunset
         isha: 0
     },
-    darkMode: false
+    darkMode: false,
+    tasbihCount: 0,
+    tasbihIndex: 0
 };
 
 // Initialization
@@ -226,13 +231,6 @@ function updateStaticData() {
 
     const dayLenMins = dailyData.dayLength;
     ui.valDayLen.innerText = `${Math.floor(dayLenMins / 60)}س ${Math.floor(dayLenMins % 60)}د`;
-
-    // Qibla
-    const qibla = Calculator.getQibla(state.lat, state.lng);
-    ui.valQibla.innerText = qibla.toFixed(2);
-    if (ui.compassDisk) {
-        ui.compassDisk.style.transform = `rotate(${-qibla}deg)`;
-    }
 
     // Prayer Times List
     ui.times.fajr.innerText = Calculator.formatTime(dailyData.fajr);
@@ -539,102 +537,94 @@ function updateActivePrayer(curMins) {
     }
 }
 
-// ========== LIVE COMPASS FUNCTIONALITY ==========
-let compassActive = false;
-let deviceHeading = 0;
-let lastRotation = 0; // For smoothing
+// ========== ADHKAR & TASBIH LOGIC ==========
+const ADHKAR_DATA = {
+    sabah: [
+        { text: "أعوذ بالله من الشيطان الرجيم (آية الكرسي)", count: 1 },
+        { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له", count: 1 },
+        { text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك...", count: 1 },
+        { text: "يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين", count: 1 }
+    ],
+    masaa: [
+        { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له", count: 1 },
+        { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت، وإليك المصير", count: 1 },
+        { text: "سبحان الله وبحمده (100 مرة)", count: 100 }
+    ],
+    prayer: [
+        { text: "أستغفر الله (3 مرات)", count: 3 },
+        { text: "اللهم أنت السلام ومنك السلام، تباركت يا ذا الجلال والإكرام", count: 1 },
+        { text: "سبحان الله (33 مرة)", count: 33 },
+        { text: "الحمد لله (33 مرة)", count: 33 },
+        { text: "الله أكبر (33 مرة)", count: 33 }
+    ],
+    sleep: [
+        { text: "باسمك اللهم أموت وأحيا", count: 1 },
+        { text: "اللهم قني عذابك يوم تبعث عبادك", count: 3 },
+        { text: "سورة الإخلاص والمعوذتين", count: 3 }
+    ]
+};
 
-if (ui.activateCompass) {
-    ui.activateCompass.addEventListener('click', async () => {
-        if (compassActive) {
-            // Deactivate
-            compassActive = false;
-            ui.activateCompass.innerHTML = '🧭 تفعيل البوصلة الحية';
-            ui.compassStatus.innerText = 'البوصلة غير نشطة';
-            ui.compassStatus.classList.remove('active');
-            window.removeEventListener('deviceorientationabsolute', handleOrientation);
-            window.removeEventListener('deviceorientation', handleOrientation);
-            return;
-        }
+const TASBIH_PHRASES = ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر"];
 
-        // Request permission for iOS 13+
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            try {
-                const permission = await DeviceOrientationEvent.requestPermission();
-                if (permission !== 'granted') {
-                    alert('يجب السماح بالوصول إلى حساسات الجهاز لتفعيل البوصلة');
-                    return;
-                }
-            } catch (error) {
-                console.error('Permission error:', error);
-                return;
-            }
-        }
+// Tasbih Functionality
+if (ui.tasbihBtn) {
+    ui.tasbihBtn.addEventListener('click', () => {
+        state.tasbihCount++;
+        ui.tasbihCount.innerText = state.tasbihCount;
 
-        // Activate compass
-        compassActive = true;
-        ui.activateCompass.innerHTML = '⏸️ إيقاف البوصلة';
-        ui.compassStatus.innerText = 'البوصلة نشطة';
-        ui.compassStatus.classList.add('active');
-
-        // Prefer deviceorientationabsolute for better accuracy on Android
-        if ('ondeviceorientationabsolute' in window) {
-            window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-        } else {
-            window.addEventListener('deviceorientation', handleOrientation, true);
+        // Change phrase every 33 counts
+        if (state.tasbihCount % 33 === 0) {
+            state.tasbihIndex = (state.tasbihIndex + 1) % TASBIH_PHRASES.length;
+            ui.tasbihText.innerText = TASBIH_PHRASES[state.tasbihIndex];
+            // Vibrate if supported
+            if (navigator.vibrate) navigator.vibrate(50);
         }
     });
 }
 
-function handleOrientation(event) {
-    if (!compassActive) return;
+if (ui.resetTasbih) {
+    ui.resetTasbih.addEventListener('click', () => {
+        state.tasbihCount = 0;
+        state.tasbihIndex = 0;
+        ui.tasbihCount.innerText = "0";
+        ui.tasbihText.innerText = TASBIH_PHRASES[0];
+    });
+}
 
-    let heading = 0;
+// Adhkar Reading Logic
+if (ui.readAdhkarBtns) {
+    ui.readAdhkarBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.getAttribute('data-type');
+            showAdhkar(type);
+        });
+    });
+}
 
-    // Check for iOS heading first
-    if (event.webkitCompassHeading !== undefined) {
-        heading = event.webkitCompassHeading;
-    } else if (event.absolute === true || event.alpha !== null) {
-        // Android or absolute orientation
-        heading = 360 - event.alpha;
-    } else {
-        return;
-    }
+function showAdhkar(type) {
+    const data = ADHKAR_DATA[type];
+    const titles = { sabah: "أذكار الصباح", masaa: "أذكار المساء", prayer: "أذكار ما بعد الصلاة", sleep: "أذكار النوم" };
 
-    // Update state
-    deviceHeading = heading;
+    ui.modalTitle.innerText = titles[type];
+    ui.adhkarList.innerHTML = '';
 
-    // Calculate rotation to Qibla
-    const qiblaAngle = Calculator.getQibla(state.lat, state.lng);
-    let rotation = (deviceHeading - qiblaAngle);
+    data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'dhikr-item';
+        div.innerHTML = `
+            <p class="dhikr-text">${item.text}</p>
+            <span class="dhikr-count">التكرار: ${item.count}</span>
+        `;
+        ui.adhkarList.appendChild(div);
+    });
 
-    // Smoothing the rotation to avoid jitters
-    if (Math.abs(rotation - lastRotation) > 180) {
-        if (rotation > lastRotation) lastRotation += 360;
-        else lastRotation -= 360;
-    }
+    ui.adhkarModal.classList.remove('hidden');
+}
 
-    // Low-pass filter for smoother movement
-    const smoothRotation = lastRotation + (rotation - lastRotation) * 0.1;
-    lastRotation = smoothRotation;
-
-    if (ui.compassDisk) {
-        ui.compassDisk.style.transform = `rotate(${smoothRotation}deg)`;
-    }
-
-    // Update Digital Display
-    if (ui.currentDegrees) {
-        ui.currentDegrees.innerText = `${Math.round(deviceHeading)}°`;
-    }
-    if (ui.targetDegrees) {
-        ui.targetDegrees.innerText = `${Math.round(qiblaAngle)}°`;
-    }
-
-    // Visual feedback when aligned (within 2 degrees)
-    const isAligned = Math.abs(rotation % 360) < 2;
-    if (ui.currentDegrees) {
-        ui.currentDegrees.style.color = isAligned ? 'var(--tunisia-red)' : '';
-    }
+if (ui.closeAdhkar) {
+    ui.closeAdhkar.addEventListener('click', () => {
+        ui.adhkarModal.classList.add('hidden');
+    });
 }
 
 // ========== SETTINGS MANAGEMENT ==========
